@@ -1,0 +1,36 @@
+import { Routes, Route, Navigate } from "react-router-dom";
+import AppLayout from "./layouts/AppLayout";
+import SubmissionsList from "./pages/SubmissionsList";
+import SubmissionDetail from "./pages/SubmissionDetail";
+import SettingsPage from "./pages/SettingsPage";
+import LoginPage from "./pages/LoginPage";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { AuthProvider } from "./context/AuthContext";
+
+function App() {
+  return (
+    <AuthProvider>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <AppLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<Navigate to="/inbox" replace />} />
+          <Route path="inbox" element={<SubmissionsList />} />
+          <Route path="site/:siteId" element={<SubmissionsList />} />
+          <Route path="submission/:submissionId" element={<SubmissionDetail />} />
+          <Route path="settings" element={<SettingsPage />} />
+          <Route path="trash" element={<SubmissionsList />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/inbox" replace />} />
+      </Routes>
+    </AuthProvider>
+  );
+}
+
+export default App;
