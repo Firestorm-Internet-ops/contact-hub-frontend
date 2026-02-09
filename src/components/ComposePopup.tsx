@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { sendEmail } from "../api/email";
-import type { Email, EmailCreate, ComposePopupProps } from "../types";
+import type { EmailCreate, ComposePopupProps } from "../types";
 
 const ComposePopup = ({ isOpen, onClose, submissionId, toEmail, onEmailSent, isFirstEmail, originalSubject }: ComposePopupProps) => {
     // Generate reply subject for follow-up emails
