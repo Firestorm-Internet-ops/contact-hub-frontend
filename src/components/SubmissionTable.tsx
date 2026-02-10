@@ -47,6 +47,19 @@ const SubmissionTable = ({ submissions, sites, isLoading, onRowClick, onDelete }
     return (
         <div className="bg-white shadow-sm rounded-lg border border-gray-200 overflow-hidden">
             <table className="min-w-full table-fixed">
+                <colgroup>
+                    {/* Icon + Name: 30% */}
+                    <col style={{ width: '3%' }} />
+                    <col style={{ width: '27%' }} />
+                    {/* Subject + Status tag: 40% */}
+                    <col style={{ width: '35%' }} />
+                    <col className="hidden md:table-column" style={{ width: '5%' }} />
+                    {/* Website Name: 15% */}
+                    <col className="hidden sm:table-column" style={{ width: '15%' }} />
+                    {/* Date + Delete: 15% */}
+                    <col style={{ width: '11%' }} />
+                    <col style={{ width: '4%' }} />
+                </colgroup>
                 <tbody className="divide-y divide-gray-100">
                     {submissions.map((submission) => {
                         const isUnread = submission.status === 'new';
@@ -60,7 +73,7 @@ const SubmissionTable = ({ submissions, sites, isLoading, onRowClick, onDelete }
                                 }`}
                             >
                                 {/* Status / Indicator Column */}
-                                <td className="w-12 pl-4 py-3 align-middle text-center">
+                                <td className="pl-4 py-3 align-middle text-center">
                                     <div className="flex items-center justify-center">
                                         {hasCustomerReply ? (
                                             // Bell notification icon for customer replies
@@ -80,42 +93,36 @@ const SubmissionTable = ({ submissions, sites, isLoading, onRowClick, onDelete }
                                     </div>
                                 </td>
 
-                                {/* Submitter Name (Fixed Width) */}
-                                <td className={`w-48 px-2 py-3 align-middle truncate ${
+                                {/* Submitter Name */}
+                                <td className={`px-2 py-3 align-middle truncate ${
                                     hasCustomerReply ? 'font-bold text-black' :
                                     isUnread ? 'font-bold text-gray-900' : 'font-medium text-gray-900'
                                 }`}>
                                     {submission.submitter_name || submission.submitter_email || 'Unknown'}
                                 </td>
 
-                                {/* Subject (Truncated to 3 words) */}
+                                {/* Subject (Word Wrap) */}
                                 <td className="px-2 py-3 align-middle">
-                                    <div className="flex items-center">
-                                        <span className={`truncate ${
-                                            hasCustomerReply ? 'font-bold text-black' :
-                                            isUnread ? 'font-bold text-gray-900' : 'font-medium text-gray-700'
-                                        }`}>
-                                            {(() => {
-                                                const subject = submission.subject || '(No Subject)';
-                                                const words = subject.split(/\s+/);
-                                                return words.length > 3 ? words.slice(0, 3).join(' ') + ' ...' : subject;
-                                            })()}
-                                        </span>
-                                    </div>
+                                    <span className={`line-clamp-2 break-words ${
+                                        hasCustomerReply ? 'font-bold text-black' :
+                                        isUnread ? 'font-bold text-gray-900' : 'font-medium text-gray-700'
+                                    }`}>
+                                        {submission.subject || '(No Subject)'}
+                                    </span>
                                 </td>
 
                                 {/* Status Badge */}
-                                <td className="w-36 px-2 py-3 align-middle hidden md:table-cell">
+                                <td className="px-2 py-3 align-middle hidden md:table-cell">
                                     <StatusBadge status={submission.status} />
                                 </td>
 
                                 {/* Site Name */}
-                                <td className="w-32 px-2 py-3 align-middle text-right text-xs text-gray-500 truncate hidden sm:table-cell">
+                                <td className="px-2 py-3 align-middle text-right text-xs text-gray-500 truncate hidden sm:table-cell">
                                     {getSiteName(submission.site_id)}
                                 </td>
 
                                 {/* Date */}
-                                <td className={`w-24 pr-2 py-3 align-middle text-right text-xs whitespace-nowrap ${
+                                <td className={`pr-2 py-3 align-middle text-right text-xs whitespace-nowrap ${
                                     hasCustomerReply ? 'font-bold text-black' :
                                     isUnread ? 'font-bold text-gray-900' : 'font-normal text-gray-500'
                                 }`}>
@@ -123,7 +130,7 @@ const SubmissionTable = ({ submissions, sites, isLoading, onRowClick, onDelete }
                                 </td>
 
                                 {/* Actions (Delete) */}
-                                <td className="w-10 pr-4 py-3 align-middle text-right">
+                                <td className="pr-4 py-3 align-middle text-right">
                                     <button
                                         onClick={(e) => handleDeleteClick(e, submission.id)}
                                         className="text-gray-400 hover:text-red-600 p-1 rounded-full hover:bg-red-50 transition-colors"
