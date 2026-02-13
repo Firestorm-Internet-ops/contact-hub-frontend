@@ -3,8 +3,9 @@ import { getCurrentUser } from "../api/user";
 import type { User } from "../types";
 import ProfileSettings from "../components/settings/ProfileSettings";
 import SiteManagement from "../components/settings/SiteManagement";
+import GmailIntegration from "../components/settings/GmailIntegration";
 
-type TabType = "profile" | "sites";
+type TabType = "profile" | "sites" | "email";
 
 const SettingsPage = () => {
     const [activeTab, setActiveTab] = useState<TabType>("profile");
@@ -30,6 +31,7 @@ const SettingsPage = () => {
     const tabs: { id: TabType; label: string; adminOnly?: boolean }[] = [
         { id: "profile", label: "Profile" },
         { id: "sites", label: "Sites", adminOnly: true },
+        { id: "email", label: "Email", adminOnly: true },
     ];
 
     const visibleTabs = tabs.filter((tab) => !tab.adminOnly || isAdmin);
@@ -74,6 +76,7 @@ const SettingsPage = () => {
                     </div>
                 )}
                 {activeTab === "sites" && isAdmin && <SiteManagement />}
+                {activeTab === "email" && isAdmin && <GmailIntegration />}
             </div>
         </div>
     );
