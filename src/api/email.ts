@@ -2,7 +2,7 @@ import apiClient from "./client"
 import { cacheGet, cacheSet, cacheInvalidate } from "./cache";
 import type { Email, EmailCreate } from "../types";
 
-const EMAILS_TTL = 1 * 60 * 1000; // 1 minute
+const EMAILS_TTL = 2 * 60 * 1000; // 2 minutes
 
 export const getEmails = async (submissionId: number): Promise<Email[]> => {
     const cacheKey = `emails:${submissionId}`;

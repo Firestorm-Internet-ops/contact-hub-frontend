@@ -2,7 +2,7 @@ import apiClient from "./client"
 import { cacheGet, cacheSet, cacheInvalidate, cacheInvalidatePattern } from "./cache";
 import type { Submission, SubmissionUpdate } from "../types";
 
-const SUBMISSIONS_TTL = 2 * 60 * 1000; // 2 minutes
+const SUBMISSIONS_TTL = 5 * 60 * 1000; // 5 minutes
 
 export const getSubmissions = async (siteId?: number, filters?: { is_active?: boolean }): Promise<Submission[]> => {
     const cacheKey = `submissions:${siteId ?? 'all'}:${filters?.is_active ?? 'default'}`;

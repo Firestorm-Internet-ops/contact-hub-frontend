@@ -93,7 +93,7 @@ const EmailItem = ({ email }: { email: Email }) => {
                 )}
 
                 <div
-                    className="text-sm text-gray-800 font-sans prose prose-sm max-w-none"
+                    className="text-sm text-gray-800 font-sans prose prose-sm max-w-none whitespace-pre-wrap"
                     dangerouslySetInnerHTML={{
                         __html: DOMPurify.sanitize(stripOriginalMessageQuote(email.body || ''))
                     }}

@@ -3,11 +3,17 @@ import { sendEmail } from "../api/email";
 import type { EmailCreate, ComposePopupProps } from "../types";
 
 const ComposePopup = ({ isOpen, onClose, submissionId, toEmail, onEmailSent, isFirstEmail, originalSubject }: ComposePopupProps) => {
-    // Generate reply subject for follow-up emails
+    // If submission has a subject from Fluent Forms, auto-generate; otherwise let admin type it
+    const hasOriginalSubject = !!originalSubject?.trim();
+
     const getDefaultSubject = () => {
-        if (isFirstEmail) return "";
-        const subject = originalSubject || "(No Subject)";
-        return `Re: ${subject} (Ticket No: ${submissionId})`;
+        if (hasOriginalSubject) {
+            return `Re: ${originalSubject} (Ticket No: ${submissionId})`;
+        }
+        if (!isFirstEmail) {
+            return `Re: (No Subject) (Ticket No: ${submissionId})`;
+        }
+        return "";
     };
 
     const [body, setBody] = useState("");
@@ -28,8 +34,8 @@ const ComposePopup = ({ isOpen, onClose, submissionId, toEmail, onEmailSent, isF
             setError("No recipient email found.");
             return;
         }
-        if (isFirstEmail && !subject.trim()) {
-            setError("Subject is required for the first email.");
+        if (!subject.trim()) {
+            setError("Subject is required.");
             return;
         }
 
@@ -82,19 +88,18 @@ const ComposePopup = ({ isOpen, onClose, submissionId, toEmail, onEmailSent, isF
 
                 <input
                     type="text"
-                    placeholder={isFirstEmail ? "Subject (required)" : "Subject (auto-generated)"}
+                    placeholder={isFirstEmail && !hasOriginalSubject ? "Subject (required)" : "Subject (auto-generated)"}
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
-                    disabled={!isFirstEmail}
-                    className={`w-full mb-3 px-2 py-1 border-b focus:outline-none text-sm ${
-                        isFirstEmail
-                            ? 'border-gray-200 focus:border-blue-500'
-                            : 'border-gray-100 bg-gray-50 text-gray-500 cursor-not-allowed'
-                    }`}
+                    disabled={hasOriginalSubject || !isFirstEmail}
+                    className={`w-full mb-3 px-2 py-1 border-b focus:outline-none text-sm ${isFirstEmail && !hasOriginalSubject
+                        ? 'border-gray-200 focus:border-blue-500'
+                        : 'border-gray-100 bg-gray-50 text-gray-500 cursor-not-allowed'
+                        }`}
                 />
 
                 <textarea
-                    className="w-full flex-1 resize-none focus:outline-none p-2 text-gray-900 text-sm border border-gray-100 rounded mb-4"
+                    className="w-full flex-1 resize-y min-h-[120px] focus:outline-none p-2 text-gray-900 text-sm border border-gray-100 rounded mb-4"
                     placeholder="Write your reply..."
                     rows={8}
                     value={body}

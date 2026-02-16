@@ -3,7 +3,7 @@ import { cacheGet, cacheSet, cacheInvalidate } from "./cache";
 import type { Site, SiteAdmin, SiteCreate, SiteUpdate, SyncResult } from "../types";
 
 const SITES_CACHE_KEY = 'sites';
-const SITES_TTL = 5 * 60 * 1000; // 5 minutes
+const SITES_TTL = 10 * 60 * 1000; // 10 minutes
 
 export const getSites = async (): Promise<Site[]> => {
     const cached = cacheGet<Site[]>(SITES_CACHE_KEY);
