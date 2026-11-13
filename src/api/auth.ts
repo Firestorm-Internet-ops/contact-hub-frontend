@@ -2,17 +2,14 @@ import apiClient from "./client";
 import type { TokenResponse, LoginCredentials } from "../types";
 
 export const login = async (credentials: LoginCredentials): Promise<TokenResponse> => {
-    // Backend expects query params for this specific endpoint implementation
-    // or application/x-www-form-urlencoded. 
-    // Based on the plan and backend code `Depends()`, we pass as params.
-    const params = new URLSearchParams();
-    params.append('username', credentials.username);
-    params.append('password', credentials.password);
+    // OAuth2 password form in the request BODY (application/x-www-form-urlencoded).
+    // Never send credentials as query params: URLs end up in server and proxy access logs.
+    const form = new URLSearchParams();
+    form.append('username', credentials.username);
+    form.append('password', credentials.password);
 
-    // Note: If backend expects JSON body, use the second argument. 
-    // But `Depends(LoginRequest)` usually implies query params in FastAPI unless `Body()` is used.
-    const response = await apiClient.post<TokenResponse>("/auth/login/access-token", null, {
-        params: credentials
+    const response = await apiClient.post<TokenResponse>("/auth/login/access-token", form, {
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
     });
     return response.data;
 };
